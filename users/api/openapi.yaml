@@ -1,0 +1,748 @@
+openapi: 3.0.0
+info:
+  title: Users API
+  description: This API is in charge of managing the actions relative to the user
+    data
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /users/register:
+    post:
+      tags:
+      - user
+      summary: Submit a form full of information about the user
+      description: The user fill the fields of a form that will be used and validated
+        to create a new account.
+      operationId: usersRegisterPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "201":
+          description: Created
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Correctly registered user.
+                x-content-type: text/plain
+        "400":
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: This account already exists.
+                x-content-type: text/plain
+      x-swagger-router-controller: User
+  /users/login:
+    post:
+      tags:
+      - user
+      summary: Submit the username and password to log in the aplication
+      description: Submit the username and password to log in the aplication
+      operationId: login
+      parameters:
+      - name: username
+        in: query
+        description: The name of an user.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: Juanito_2000
+      - name: password
+        in: query
+        description: The password of the user.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: password1234
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User logged in.
+                x-content-type: text/plain
+        "400":
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Username and/or password are incorrect.
+                x-content-type: text/plain
+        "404":
+          description: Not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: User
+  /users/logout:
+    get:
+      tags:
+      - user
+      summary: Log out of the account currently logged in.
+      description: Log out of the account currently logged in.
+      operationId: usersLogoutGET
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Successful log out.
+                x-content-type: text/plain
+        "401":
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Unauthorized action.
+                x-content-type: text/plain
+      x-swagger-router-controller: User
+  /users/{userId}:
+    get:
+      tags:
+      - user
+      summary: Return a user by its ID.
+      operationId: usersUserIdGET
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of an user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: User
+    put:
+      tags:
+      - user
+      summary: Modify an user given its ID.
+      operationId: usersUserIdPUT
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of an user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User modified.
+                x-content-type: text/plain
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: User
+    delete:
+      tags:
+      - user
+      summary: Delete an user given its ID.
+      operationId: usersUserIdDELETE
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of an user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User deleted.
+                x-content-type: text/plain
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: User
+  /users/filterByName:
+    get:
+      tags:
+      - user
+      summary: Return all users that match the optional filter.
+      operationId: usersFilterByNameGET
+      parameters:
+      - name: username
+        in: query
+        description: The string to filter by username.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: juanito
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                x-content-type: application/json
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: User
+  /users/ban/{userId}:
+    put:
+      tags:
+      - user
+      summary: Ban or unban an user depending on the value of banFlag
+      operationId: usersBanUserIdPUT
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of an user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      - name: banFlag
+        in: query
+        description: Flag to ban (true) or unban (false) an user
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: boolean
+          example: true
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User banned.
+                x-content-type: text/plain
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: User
+  /users/{userId}/subscriptionTier:
+    get:
+      tags:
+      - subscription
+      summary: Returns the type of subscriptionTier that the specified user currently
+        has.
+      description: Returns the type of subscriptionTier that the specified user currently
+        has.
+      operationId: usersUserIdSubscriptionTierGET
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of an user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: MID-END Hardware.
+                x-content-type: text/plain
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: Subscription
+    put:
+      tags:
+      - subscription
+      summary: Modifies the subscriptionTier of an user with the new value specified.
+      description: Modifies the subscriptionTier of an user with the new value specified.
+      operationId: usersUserIdSubscriptionTierPUT
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of an user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      - name: newSubscription
+        in: query
+        description: The new subscription plan of the user.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: HIGH-END hardware
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Changed subscription plan from MID-END to HIGH-END hardware.
+                x-content-type: text/plain
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: Subscription
+    delete:
+      tags:
+      - subscription
+      summary: Cancels the actual cloud gaming subscription of the user.
+      description: Cancels the actual cloud gaming subscription of the user.
+      operationId: usersUserIdSubscriptionTierDELETE
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of an user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Current subscription plan cancelled.
+                x-content-type: text/plain
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: Subscription
+  /users/{userId}/friends:
+    get:
+      tags:
+      - friend
+      summary: Fetch all the friends of an user
+      operationId: usersUserIdFriendsGET
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of the user querying the API.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                x-content-type: application/json
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: Friend
+    post:
+      tags:
+      - friend
+      summary: Add a new user to the friendlist.
+      operationId: usersUserIdFriendsPOST
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of the user querying the API.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      - name: newFriendId
+        in: query
+        description: The identifier of the user that is going to be added to the friendlist.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          example: 200
+      responses:
+        "201":
+          description: Created
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User added to the friendlist.
+                x-content-type: text/plain
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "User not found, could not be added to the friendlist."
+                x-content-type: text/plain
+      x-swagger-router-controller: Friend
+    delete:
+      tags:
+      - friend
+      summary: Delete a friend from the friendlist
+      operationId: usersUserIdFriendsDELETE
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of the user querying the API.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      - name: unfriendUserId
+        in: query
+        description: The identifier of the user which is going to be removed from
+          the friendlist
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          example: 200
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User removed from the friendlist.
+                x-content-type: text/plain
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User could not be removed from the friendlist.
+                x-content-type: text/plain
+      x-swagger-router-controller: Friend
+  /users/{userId}/videogames:
+    get:
+      tags:
+      - videogames
+      summary: Fetch all the videogames the user has purchased.
+      operationId: usersUserIdVideogamesGET
+      parameters:
+      - name: userId
+        in: path
+        description: The identifier of the user querying the API.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Videogame'
+                x-content-type: application/json
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: Videogames
+  /users/{userId}/servers:
+    get:
+      tags:
+      - server
+      summary: Returns all the servers the user has created.
+      description: Returns all the servers the user has created.
+      operationId: usersUserIdServersGET
+      parameters:
+      - name: userId
+        in: path
+        description: The user's identifier.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 100
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Server'
+                x-content-type: application/json
+        "404":
+          description: Not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Server not found.
+                x-content-type: text/plain
+      x-swagger-router-controller: Server
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 100
+        username:
+          type: string
+          example: Juanito_2000
+        firstName:
+          type: string
+          example: Juan
+        lastName:
+          type: string
+          example: Díaz
+        email:
+          type: string
+          example: juanito.diaz@email.com
+        password:
+          type: string
+          example: password1234
+        phone:
+          type: string
+          example: "123456789"
+        subscriptionTier:
+          type: string
+          example: MID-END Hardware
+        servers:
+          type: array
+          example:
+          - 100
+          - 200
+          - 300
+          items:
+            type: integer
+        videogames:
+          type: array
+          example:
+          - 100
+          - 200
+          - 300
+          items:
+            type: integer
+        friends:
+          type: array
+          example:
+          - 100
+          - 200
+          - 300
+          items:
+            type: integer
+      example:
+        firstName: Juan
+        lastName: Díaz
+        password: password1234
+        servers:
+        - 100
+        - 200
+        - 300
+        phone: "123456789"
+        userId: 100
+        subscriptionTier: MID-END Hardware
+        email: juanito.diaz@email.com
+        friends:
+        - 100
+        - 200
+        - 300
+        username: Juanito_2000
+        videogames:
+        - 100
+        - 200
+        - 300
+      xml:
+        name: user
+    Videogame:
+      type: object
+      properties:
+        gameId:
+          type: integer
+          example: 1
+        videogame-name:
+          type: string
+          example: God Of War
+        genre:
+          type: string
+          example: Fantasia
+        files:
+          type: string
+          example: "images,configuration files, design files"
+      example:
+        gameId: 1
+        videogame-name: God Of War
+        genre: Fantasia
+        files: "images,configuration files, design files"
+      xml:
+        name: videogame
+    Server:
+      type: object
+      properties:
+        serverId:
+          type: integer
+          example: 1
+        ownerId:
+          type: integer
+          example: 100
+        server-name:
+          type: string
+          example: Minecraft-server
+        serverSpecs:
+          type: string
+          example: MID-TIER
+        fileLocation:
+          type: string
+          example: https://www.example.com/
+        status:
+          type: string
+          example: RUNNING
+        whitelist:
+          type: array
+          items:
+            $ref: '#/components/schemas/Whitelist'
+      example:
+        server-name: Minecraft-server
+        serverSpecs: MID-TIER
+        fileLocation: https://www.example.com/
+        whitelist:
+        - users: "[100,200,300]"
+        - users: "[100,200,300]"
+        ownerId: 100
+        serverId: 1
+        status: RUNNING
+      xml:
+        name: server
+    Whitelist:
+      type: object
+      properties:
+        users:
+          type: string
+          example: "[100,200,300]"
+      example:
+        users: "[100,200,300]"
+      xml:
+        name: whitelist
