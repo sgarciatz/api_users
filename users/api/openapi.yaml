@@ -729,8 +729,7 @@ components:
         serverSpecs: MID-TIER
         fileLocation: https://www.example.com/
         whitelist:
-        - users: "[100,200,300]"
-        - users: "[100,200,300]"
+        - users: [100,200,300]
         ownerId: 100
         serverId: 1
         status: RUNNING
@@ -740,9 +739,9 @@ components:
       type: object
       properties:
         users:
-          type: string
-          example: "[100,200,300]"
-      example:
-        users: "[100,200,300]"
+          type: array
+          items:
+            type: integer
+          example: [100,200,300]
       xml:
         name: whitelist

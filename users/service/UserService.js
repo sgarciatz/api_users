@@ -51,10 +51,10 @@ exports.login = function(username,password) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     if (users.some(user => user.username === username && user.password === password)) {
-      examples['text/plain'] = "User logged in.";
+      examples['text/plain'] = 'User logged in.';
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      examples['text/plain'] = "User not found.";
+      examples['text/plain'] = 'Username and/or password are incorrect.';
       reject(examples[Object.keys(examples)[0]]);
     }
   });
@@ -68,22 +68,16 @@ exports.login = function(username,password) {
  * banFlag Boolean Flag to ban (true) or unban (false) an user
  * returns String
  **/
-exports.usersBanUserIdPUT = function(userId,banFlag) {
+exports.usersBanUserIdPUT = function(banFlag, userId) {
   return new Promise(function(resolve, reject) {
     var examples = {};
-    if (users.some(user => user.username === username && user.password === password)) {
-      examples['text/plain'] = "User logged in.";
+    let banStatus = banFlag ? 'banned' : 'unbanned';
+    if (users.some(user => user.userId === userId)) {
+      examples['text/plain'] = 'User ' + banStatus + '.';
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      examples['text/plain'] = "User logged in.";
+      examples['text/plain'] = 'User not found.';
       reject(examples[Object.keys(examples)[0]]);
-    }
-
-    examples['application/json'] = "User banned.";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
     }
   });
 }
@@ -98,11 +92,13 @@ exports.usersBanUserIdPUT = function(userId,banFlag) {
 exports.usersFilterByNameGET = function(username) {
   return new Promise(function(resolve, reject) {
     var examples = {};
-
-    if (Object.keys(examples).length > 0) {
+    let userList = users.filter(user => user.username === username);
+    if (userList) {
+      examples['application/json'] = userList;
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+      examples['text/plain'] = 'User not found.';
+      reject(examples[Object.keys(examples)[0]]);
     }
   });
 }
@@ -137,11 +133,12 @@ exports.usersLogoutGET = function() {
 exports.usersRegisterPOST = function(body) {
   return new Promise(function(resolve, reject) {
     var examples = {};
-    examples['application/json'] = "Correctly registered user.";
-    if (Object.keys(examples).length > 0) {
+    if (!users.some(user => user.username === body.username)) {
+      examples['text/plain'] = 'Correctly registered user.';
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+      examples['text/plain'] = 'This account already exists.';
+      reject(examples[Object.keys(examples)[0]]);
     }
   });
 }
@@ -156,11 +153,12 @@ exports.usersRegisterPOST = function(body) {
 exports.usersUserIdDELETE = function(userId) {
   return new Promise(function(resolve, reject) {
     var examples = {};
-    examples['application/json'] = "User deleted.";
-    if (Object.keys(examples).length > 0) {
+    if (users.some(user => user.userId === userId)) {
+      examples['text/plain'] = 'User deleted.';
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+      examples['text/plain'] = 'User not found.';
+      reject(examples[Object.keys(examples)[0]]);
     }
   });
 }
@@ -175,23 +173,13 @@ exports.usersUserIdDELETE = function(userId) {
 exports.usersUserIdGET = function(userId) {
   return new Promise(function(resolve, reject) {
     var examples = {};
-    examples['application/json'] = {
-  "firstName" : "Juan",
-  "lastName" : "Díaz",
-  "password" : "password1234",
-  "servers" : [ 100, 200, 300 ],
-  "phone" : "123456789",
-  "userId" : 100,
-  "subscriptionTier" : "MID-END Hardware",
-  "email" : "juanito.diaz@email.com",
-  "friends" : [ 100, 200, 300 ],
-  "username" : "Juanito_2000",
-  "videogames" : [ 100, 200, 300 ]
-};
-    if (Object.keys(examples).length > 0) {
+    let user = users.find(user => user.userId === userId);
+    if (user) {
+      examples['application/json'] = user;
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+      examples['text/plain'] = 'User not found.';
+      reject(examples[Object.keys(examples)[0]]);
     }
   });
 }
@@ -204,14 +192,15 @@ exports.usersUserIdGET = function(userId) {
  * userId Integer The identifier of an user.
  * returns String
  **/
-exports.usersUserIdPUT = function(body,userId) {
+exports.usersUserIdPUT = function(body, userId) {
   return new Promise(function(resolve, reject) {
     var examples = {};
-    examples['application/json'] = "User modified.";
-    if (Object.keys(examples).length > 0) {
+    if (users.some(user => user.userId === userId)) {
+      examples['text/plain'] = 'User modified.';
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+      examples['text/plain'] = 'User not found.';
+      reject(examples[Object.keys(examples)[0]]);
     }
   });
 }

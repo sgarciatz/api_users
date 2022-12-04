@@ -9,7 +9,7 @@ module.exports.login = function login (req, res, next, username, password) {
       utils.writeJson(res, response, 200);
     })
     .catch(function (response) {
-      utils.writeJson(res, response, 404);
+      utils.writeJson(res, response, 400);
     });
 };
 
