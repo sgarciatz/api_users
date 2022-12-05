@@ -6,7 +6,7 @@ pipeline {
         stage('build') {
             steps {
                 sh 'cd users && npm install && cd ../'
-                sh 'docker build ./API_users -t istic/api_users'
+                sh 'docker build ./users -t istic/api_users'
             }
         }
          stage('test') {
