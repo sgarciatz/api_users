@@ -1,0 +1,136 @@
+{
+	"info": {
+		"_postman_id": "7d3048da-e40e-4a59-999e-6ae037b3400a",
+		"name": "users test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:20081/users/100",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20081",
+					"path": [
+						"users",
+						"100"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:20081/users/login?username=Juanito_2000&password=password1234",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20081",
+					"path": [
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "Juanito_2000"
+						},
+						{
+							"key": "password",
+							"value": "password1234"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Díaz\",\n  \"password\": \"password1234\",\n  \"servers\": [\n    100,\n    200,\n    300\n  ],\n  \"phone\": \"123456789\",\n  \"userId\": 100,\n  \"subscriptionTier\": \"MID-END Hardware\",\n  \"email\": \"juanito.diaz@email.com\",\n  \"friends\": [\n    100,\n    200,\n    300\n  ],\n  \"username\": \"usuario_pruebas\",\n  \"videogames\": [\n    100,\n    200,\n    300\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:20081/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20081",
+					"path": [
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete friend",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:20081/users/100/friends?unfriendUserId=200",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20081",
+					"path": [
+						"users",
+						"100",
+						"friends"
+					],
+					"query": [
+						{
+							"key": "unfriendUserId",
+							"value": "200"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user servers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:20081/users/100/servers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20081",
+					"path": [
+						"users",
+						"100",
+						"servers"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

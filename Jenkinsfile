@@ -11,7 +11,9 @@ pipeline {
         }
          stage('test') {
             steps {
-                sh 'echo Testing'
+                sh 'docker run --detach --name test_api_users -p 20081:8081 istic/api_users:latest'
+                sh 'newman run users_tests/users_test.postman_collection.json'
+                sh 'docker rm -f test_api_users'
             }
         }
         stage('deploy') {
